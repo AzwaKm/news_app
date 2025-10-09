@@ -7,7 +7,6 @@ class NewsArticles {
   final String? content;
   final Source? source;
 
-
   factory NewsArticles.fromJson(Map<String, dynamic> json) {
     return NewsArticles(
       title: json['title'],
@@ -41,7 +40,8 @@ class Source {
 
   Source({this.id, this.name});
 
-// Berfungsi untuk merapihkan format data yang didapatkan dari server yang awalnya bertipe data .json, menjadi data yang dimngerti oleh bahasa pemrograman yang digunakan
+// Berfungsi untuk merapihkan format data yang didapatkan dari server yang awalnya bertipe data .json,
+// menjadi data yang dimengerti oleh bahasa pemrograman yang digunakan
 
 // Yang akan dikembalikan oleh api atau server ketika kita melakukan atau membuat sebuah request, diantaranya :
 // 1. Status HTTP
