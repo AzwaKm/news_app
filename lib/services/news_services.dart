@@ -5,7 +5,7 @@ import 'package:news_app/utils/constants.dart';
 // Mendefinisikan sebuah package atau library menjadi sebuah variabel secara langsung
 import 'package:http/http.dart' as http;
 
-class NewsService {
+class NewsServices {
   static const String _baseUrl = Constants.baseUrl;
   static final String _apiKey = Constants.apiKey;
 
