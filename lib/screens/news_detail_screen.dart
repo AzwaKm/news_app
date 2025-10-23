@@ -180,7 +180,29 @@ class NewsDetailScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 24)
-                  ]
+                  ],
+                  // read full article button
+                  if (article.url != null) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _openInBrowser,
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)
+                          )
+                        ),
+                        child: Text(
+                          'Read full article',
+                          style: TextStyle(
+                            fontSize: 16
+                          ),
+                        )
+                      ),
+                    )
+                  ],
+                  SizedBox(height: 32)
                 ],
               ),
             ),
