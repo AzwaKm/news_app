@@ -44,7 +44,6 @@ class _SplashScreenState extends State<SplashScreen>
 
     // navigate to home screen after 3 seconds
     Future.delayed(Duration(seconds: 3), () {
-      // TODO : defining all routes for each screens
       Get.offAllNamed(Routes.HOME);
     });
   }
