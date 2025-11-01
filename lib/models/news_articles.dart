@@ -1,11 +1,21 @@
 class NewsArticles {
   final String? title;
   final String? description;
-  final String? url;
+  final String? url; 
   final String? urlToImage;
   final String? publishedAt;
   final String? content;
   final Source? source;
+
+  NewsArticles({
+    required this.title, 
+    required this.description, 
+    required this.url,
+    required this.urlToImage, 
+    required this.publishedAt, 
+    required this.content,
+    required this.source
+  });
 
   factory NewsArticles.fromJson(Map<String, dynamic> json) {
     return NewsArticles(
@@ -30,8 +40,6 @@ class NewsArticles {
       'source': source?.toJson(),
     };
   }
-
-  NewsArticles({required this.title, required this.description, required this.url, required this.urlToImage, required this.publishedAt, required this.content, required this.source});
 }
 
 class Source {
@@ -40,12 +48,6 @@ class Source {
 
   Source({this.id, this.name});
 
-// Berfungsi untuk merapihkan format data yang didapatkan dari server yang awalnya bertipe data .json,
-// menjadi data yang dimengerti oleh bahasa pemrograman yang digunakan
-
-// Yang akan dikembalikan oleh api atau server ketika kita melakukan atau membuat sebuah request, diantaranya :
-// 1. Status HTTP
-// 2. Data yang berformat JSON
   factory Source.fromJson(Map<String, dynamic> json) {
     return Source(
       id: json['id'],

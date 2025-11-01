@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:news_app/routes/app_pages.dart';
-import 'package:news_app/utils/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:math';
+
+class AppColors {
+  static const Color primary = Color(0xFFFF6600); 
+}
+
+class Routes {
+  static const String HOME = '/home'; 
+}
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,112 +19,146 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> 
- with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
-
+    with SingleTickerProviderStateMixin {
+  
+  double _newneekTop = -200.0;
+  double _newneekTargetTop = 0.0; 
+  double _hedgehogRight = -400.0;
+  double _hedgehogTargetRight = -100.0; 
+  
   @override 
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: Duration(seconds: 2),
-      vsync: this
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAnimationSequence();
+    });
+  }
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+  Future<void> _startAnimationSequence() async {
+    final screenHeight = MediaQuery.of(context).size.height;
+    
+    _newneekTargetTop = screenHeight / 2 - 120; 
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticInOut,
-    ));
+    setState(() {
+      _newneekTop = _newneekTargetTop; 
+    });
+    await Future.delayed(const Duration(milliseconds: 1500));
+    
+    setState(() { _newneekTop -= 70; });
+    await Future.delayed(const Duration(milliseconds: 180)); 
+    
+    setState(() { _newneekTop = _newneekTargetTop; });
+    await Future.delayed(const Duration(milliseconds: 180)); 
 
-    _animationController.forward();
+    setState(() { _newneekTop -= 35; });
+    await Future.delayed(const Duration(milliseconds: 120));
 
-    // navigate to home screen after 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
-      Get.offAllNamed(Routes.HOME);
+    setState(() { _newneekTop = _newneekTargetTop; });
+    await Future.delayed(const Duration(milliseconds: 120));
+
+    setState(() { _newneekTop -= 10; });
+    await Future.delayed(const Duration(milliseconds: 70));
+
+    setState(() { _newneekTop = _newneekTargetTop; });
+    await Future.delayed(const Duration(milliseconds: 70));
+
+    setState(() { _newneekTop -= 3; });
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    setState(() { _newneekTop = _newneekTargetTop; });
+    await Future.delayed(const Duration(milliseconds: 50));
+ 
+    setState(() {
+      _hedgehogRight = _hedgehogTargetRight; 
+    });
+
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        Get.offAllNamed(Routes.HOME);
+      }
     });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     super.dispose();
   }
   
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final double staticTextStartTop = screenHeight / 2 - 45; 
+
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 20,
-                            offset: Offset(0, 10)
-                          )
-                        ]
-                      ),
-                      child: Icon(
-                        Icons.newspaper,
-                        size: 60,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Text(
-                      'News App',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1.5
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Stay Updated with Latest News',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withValues(alpha: 0.8)
-                      ),
-                    ),
-                    SizedBox(height: 50),
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)
-                    )
-                  ],
+      body: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 1500), 
+            curve: Curves.decelerate, 
+            top: _newneekTop, 
+            
+            child: const Text(
+              'NEWNEEK',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 48,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1.5,
+              ),
+            ),
+          ),
+
+          Positioned(
+            top: staticTextStartTop, 
+            child: const Text(
+              'TODAY',
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          
+          Positioned(
+            top: staticTextStartTop + 35, 
+            child: const Chip(
+              backgroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              label: Text(
+                "Let's check out our latest news!", 
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 800), 
+            curve: Curves.easeOutCubic, 
+            bottom: -80, 
+            right: _hedgehogRight, 
+            child: Transform.rotate(
+              angle: -5 * pi / 180, 
+              child: SizedBox( 
+                width: 400, 
+                height: 400,
+                child: SvgPicture.asset( 
+                  'assets/gosum_ori.svg', 
+                  fit: BoxFit.contain, 
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

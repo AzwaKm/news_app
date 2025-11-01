@@ -19,7 +19,6 @@ class AppPages {
     GetPage(
       name: _Paths.HOME,
       page: () => HomeScreen(),
-      // Memanggil untuk semua yang ada di controller
       binding: HomeBindings(),
     ),
     GetPage(

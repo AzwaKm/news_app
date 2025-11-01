@@ -13,233 +13,31 @@ class NewsDetailScreen extends StatelessWidget {
 
   NewsDetailScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [ 
-          SliverAppBar(
-            expandedHeight: 300, // utk ukuran gambar dari atas sampe bawah gambar
-            pinned: true, // jadi pas di scroll ttp keliatan, gaikut ke scroll si appbar nya 
-            flexibleSpace: FlexibleSpaceBar( // utk menyimpan gambarnya
-            background: article.urlToImage != null // ini dijalankan jika dari server memiliki gambar, maka kita akan menjalankan ini
-                ? CachedNetworkImage( // membuat kompresi dari gambar yg ada di server -> jadi kecil
-                    imageUrl: article.urlToImage!,
-                    fit: BoxFit.cover, 
-                    placeholder: (context, url) => Container( // kalau gambar belum muncul
-                    color: AppColors.divider,
-                    child: Center(
-                       child: CircularProgressIndicator(), // jika masih loading, bisa pake yg theme
-                    ),
-                    ), 
-                    errorWidget: (context, url, error) => Container(
-                      color: AppColors.divider,
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 50,
-                        color: AppColors.textHint,
-                      ),
-                    ),
-                )
-                // titik dua = nilai false // ini statement yg akan dijalankan ketika server tidak memiliki gambar
-                // atau -> image = null
-                : Container( 
-                  color: AppColors.divider,
-                  child: Icon(
-                    Icons.newspaper,
-                    size: 50,
-                    color: AppColors.textHint,
-                  ),
-                )
-
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.share),
-                onPressed: () => _shareArticle(),
-              ),
-              PopupMenuButton(
-                onSelected: (value) {
-                  switch (value) {
-                    // dua kondisi
-                    case 'copy link': // 1
-                    _copyLink();                 
-                      break;
-                      case 'open_browser': // 2
-                      _openInBrowser();
-                      break;
-                    default:
-                  }
-                },
-                itemBuilder: (context) => [ // ini utk yg titik tiga (popupmenubutton) di detail screen
-                  PopupMenuItem(
-                    value: 'Copy link',
-                    child: Row(
-                      children: [
-                        Icon(Icons.copy),
-                        SizedBox(height: 8),
-                        Text('Copy link'),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 'Open_browser',
-                    child: Row(
-                      children: [
-                        Icon(Icons.open_in_browser),
-                        SizedBox(height: 8),
-                        Text('Open in browser'),
-                      ],
-                    ),
-                  )
-                ] ,
-              )
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // source and date
-                  Row(
-                    children: [
-                      if (article.source?.name != null) ...[
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(4)
-                          ),
-                          child: Text(
-                            article.source!.name!,
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 12)
-                      ],
-                      if (article.publishedAt != null) ...[
-                        Text(
-                          timeago.format(DateTime.parse(article.publishedAt!)),
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 12
-                          ),
-                        ),
-                      ]
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  // title
-                  if (article.title != null) ...[
-                    Text(
-                      article.title!,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                        height: 1.3
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                  ],
-                  // description
-                  if (article.description != null) ...[
-                    Text(
-                      article.description!,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 16,
-                        height: 1.5
-                      ),
-                    )
-                  ],
-                  SizedBox(height: 20),
-                  // content
-                  if (article.content != null) ...[
-                    Text(
-                      'Content',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      article.content!,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.textPrimary,
-                        height: 1.6
-                      ),
-                    ),
-                    SizedBox(height: 24)
-                  ],
-                  // read full article button
-                  if (article.url != null) ...[
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _openInBrowser,
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)
-                          )
-                        ),
-                        child: Text(
-                          'Read full article',
-                          style: TextStyle(
-                            fontSize: 16
-                          ),
-                        )
-                      ),
-                    )
-                  ],
-                  SizedBox(height: 32)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
- // void function yg tidak memiliki kembalian.
   void _shareArticle() {
     if (article.url != null) {
       Share.share(
-        '${article.title ?? 'Check out this news'}\n\n${article.url!}', //n = baris baru -> enter
-         subject: article.title
+        '${article.title ?? 'Check out this news'}\n\n${article.url!}',
+          subject: article.title
       );
     }
   }
 
   void _copyLink() {
     if (article.url != null) {
-      Clipboard.setData(ClipboardData(text: article.url!)); // menyalin
+      Clipboard.setData(ClipboardData(text: article.url!));
       Get.snackbar(
-        'Succes',
+        'Success',
         'Link copied to clipboard',
         snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       );
     }
   }
 
   void _openInBrowser() async {
     if (article.url != null) {
-      final Uri url = Uri.parse(article.url!); // uri digunakan utk parsing link agar diketahui oleh aplikasi lain, biar si chrome paham.
-      // proses menunggu apakah url valid dan bisa dibuka oleh browser
+      final Uri url = Uri.parse(article.url!);
       if (await canLaunchUrl(url)) {
-        // proses menunggu ketika url sudah valid dan sedang diproses oleh browser sampai datanya muncul
         await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
         Get.snackbar(
@@ -249,5 +47,256 @@ class NewsDetailScreen extends StatelessWidget {
         );
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    timeago.setLocaleMessages('en', timeago.EnMessages()); 
+    
+    return Scaffold(
+      backgroundColor: Colors.grey[100], 
+      body: CustomScrollView(
+        slivers: [ 
+          SliverAppBar(
+            expandedHeight: 300, 
+            pinned: true,
+            backgroundColor: AppColors.primary, 
+            iconTheme: const IconThemeData(color: Colors.white), 
+            systemOverlayStyle: SystemUiOverlayStyle.light, 
+            
+            flexibleSpace: FlexibleSpaceBar( 
+              title: null, 
+              centerTitle: true,
+              
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  article.urlToImage != null
+                    ? CachedNetworkImage(
+                        imageUrl: article.urlToImage!,
+                        fit: BoxFit.cover, 
+                        placeholder: (context, url) => Container( 
+                          color: AppColors.divider,
+                          child: const Center(
+                            child: CircularProgressIndicator(color: AppColors.primary), 
+                          ),
+                        ), 
+                        errorWidget: (context, url, error) => Container(
+                          color: AppColors.divider,
+                          child: Icon(
+                            Icons.image_not_supported,
+                            size: 50,
+                            color: AppColors.textHint,
+                          ),
+                        ),
+                      )
+                    : Container( 
+                        color: AppColors.divider,
+                        child: Icon(
+                          Icons.newspaper,
+                          size: 50,
+                          color: AppColors.textHint,
+                        ),
+                      ),
+
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                          Colors.black54, 
+                          Colors.black26,
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.share, color: Colors.white),
+                onPressed: () => _shareArticle(),
+              ),
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, color: Colors.white),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'copy link':
+                      _copyLink(); 
+                      break;
+                    case 'open_browser':
+                      _openInBrowser();
+                      break;
+                    default:
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'copy link',
+                    child: Row(
+                      children: [
+                        Icon(Icons.copy, color: AppColors.textPrimary),
+                        SizedBox(width: 8),
+                        Text('Copy Link', style: TextStyle(color: AppColors.textPrimary)),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'open_browser',
+                    child: Row(
+                      children: [
+                        Icon(Icons.launch, color: AppColors.textPrimary),
+                        SizedBox(width: 8),
+                        Text('Open in Browser', style: TextStyle(color: AppColors.textPrimary)),
+                      ],
+                    ),
+                  )
+                ] ,
+              )
+            ],
+          ),
+          
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.only(top: 0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25), 
+                      topRight: Radius.circular(25),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, -5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (article.title != null) ...[
+                        Text(
+                          article.title!,
+                          style: const TextStyle(
+                            fontSize: 26, 
+                            fontWeight: FontWeight.w900, 
+                            color: AppColors.textPrimary,
+                            height: 1.2
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (article.source?.name != null) 
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: AppColors.primary.withOpacity(0.5))
+                              ),
+                              child: Text(
+                                article.source!.name!,
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+
+                          if (article.publishedAt != null) 
+                            Text(
+                              timeago.format(DateTime.parse(article.publishedAt!), locale: 'en'),
+                              style: const TextStyle(
+                                color: AppColors.textHint,
+                                fontSize: 13,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                        ],
+                      ),
+                      
+                      const Divider(height: 30),
+
+                      if (article.description != null) ...[
+                        Text(
+                          article.description!,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 16,
+                            height: 1.5,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+
+                      if (article.description != null && article.content != null)
+                        const SizedBox(height: 24),
+
+                      if (article.content != null) ...[
+                        Text(
+                          article.content!.replaceAll(RegExp(r'\s*\[\+\d+\s*chars\]\s*$'), ''),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.textPrimary,
+                            height: 1.6,
+                            letterSpacing: 0.1,
+                          ),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
+                      
+                      const SizedBox(height: 32)
+                    ],
+                  ),
+                ),
+
+                if (article.url != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _openInBrowser,
+                        icon: const Icon(Icons.public, size: 20),
+                        label: const Text(
+                          'READ FULL ARTICLE',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          elevation: 8,
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

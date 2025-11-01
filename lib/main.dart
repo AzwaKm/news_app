@@ -8,19 +8,18 @@ import 'package:news_app/utils/app_colors.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Load environment variables first before running the app
   await dotenv.load(fileName: '.env');
 
-  runApp(NewsApp());
+  runApp(NewsNeek());
 }
 
-class NewsApp extends StatelessWidget {
-  const NewsApp({super.key});
+class NewsNeek extends StatelessWidget {
+  const NewsNeek({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'News App',
+      title: 'New Neek',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: AppColors.primary,

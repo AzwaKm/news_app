@@ -25,7 +25,6 @@ class NewsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image
             if (article.urlToImage != null)
               ClipRRect(
                 borderRadius: BorderRadiusGeometry.vertical(top: Radius.circular(12)),
@@ -60,7 +59,6 @@ class NewsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Source News and Date
                   Row(
                     children: [
                       if (article.source?.name != null) ...[
@@ -77,7 +75,7 @@ class NewsCard extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                       ],
-                      // Timestamp
+
                       if (article.publishedAt != null)
                       Text(
                         timeago.format(DateTime.parse(article.publishedAt!)),
@@ -89,8 +87,6 @@ class NewsCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 12),
-
-                  // Title
                   if (article.title != null)
                     Text(
                       article.title!,
@@ -104,7 +100,6 @@ class NewsCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   SizedBox(height: 8),
-                  // Description
                   if (article.description != null)
                     Text(
                       article.description!,
